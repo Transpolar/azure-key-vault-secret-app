@@ -1,0 +1,21 @@
+# Build artifacts the deploy scripts create at runtime
+DemoApp/
+publish/
+.publish/
+app.zip
+
+# Bicep compilation output
+*.json.bak
+main.json
+
+# .NET
+bin/
+obj/
+*.user
+
+# Editor / OS
+.vs/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
