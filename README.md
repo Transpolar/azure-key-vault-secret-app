@@ -50,7 +50,7 @@ The infrastructure lives in [`bicep/`](./bicep/): `main.bicep` is the template, 
 ## Deploy from GitHub
 
 ```bash
-git clone https://github.com/<your-username>/azure-keyvault-demo.git
+git clone https://github.com/Transpolar/azure-key-vault-secret-app.git
 cd azure-keyvault-demo/bicep
 chmod +x deploy.sh
 ./deploy.sh
