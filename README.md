@@ -5,7 +5,7 @@ A proof-of-concept that deploys an ASP.NET Core 9 web app on Azure App Service w
 > **Important — this is a proof of concept.**
 > The deployed page prints secret values directly to the browser. That is intentional for this demo: it visually confirms that the app retrieved the secrets through Managed Identity rather than from local config. **Never do this in a real application.** Secrets should be consumed inside the app (e.g. used to open a database connection) and never rendered to the UI, written to logs, or returned in HTTP responses.
 
-![The deployed app showing the Key Vault name and three secrets retrieved via Managed Identity](docs/screenshot.png)
+![The deployed app showing the Key Vault name and three secrets retrieved via Managed Identity](docs/app-preview.png)
 
 ## What this is for
 
