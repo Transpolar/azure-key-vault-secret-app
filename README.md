@@ -11,17 +11,19 @@ A proof-of-concept that deploys an ASP.NET Core 9 web app on Azure App Service w
 
 The pattern this repo demonstrates — secrets in Key Vault, accessed from a Web App via Managed Identity, with RBAC controlling who can read what — is the standard way to handle credentials in modern Azure workloads. It removes connection strings and API keys from `appsettings.json`, environment variables, and CI/CD secrets.
 
-I built it because the publicly available walkthroughs for this pattern were out of date: older .NET runtimes, access-policy-based authorization instead of the RBAC model Microsoft now recommends, missing role-propagation waits, and no working end-to-end script. The full flow is captured here as a Bicep template — declarative, idempotent, and close to how this would actually be built in a real project.
+I built it because the publicly available walkthroughs for this pattern were out of date: older .NET runtimes, access-policy-based authorization instead of the RBAC model Microsoft now recommends, missing role-propagation waits, and no working end-to-end script. The full flow is captured here as a Bicep template plus a small wrapper script.
+
+> The repo is `azure-key-vault-secret-app` (the deployable thing); the title above describes the concept it demonstrates.
 
 ## What I learned building this
 
 A few things that turned out to be more involved than the tutorials suggested:
 
-- **Role assignments are eventually consistent.** When you enable a system-assigned managed identity on an App Service, the corresponding service principal in Entra ID can take 30–60 seconds to become visible to RBAC operations. The Bicep version avoids this problem entirely because ARM sequences the identity creation and role assignment in one transaction — something that's painful to get right in imperative scripts.
+- **Role assignments are eventually consistent.** When you enable a system-assigned managed identity on an App Service, the corresponding service principal in Entra ID can take 30–60 seconds to become visible to RBAC operations. Bicep avoids this problem because ARM sequences the identity creation and the role assignment in a single deployment graph.
 - **RBAC vs access policies.** Key Vault has two authorization modes. Access policies are the older, vault-local model; RBAC uses Azure-wide role assignments and is the current recommendation. This demo uses RBAC throughout (`Key Vault Secrets Officer` for the deploying user, `Key Vault Secrets User` for the Web App).
-- **`DefaultAzureCredential` is doing more than it looks.** It transparently tries multiple credential sources — environment variables, managed identity, Azure CLI login, Visual Studio — so the same `Program.cs` works locally with `az login` and in production with the managed identity. No code change between dev and prod.
+- **`DefaultAzureCredential` is doing more than it looks.** It transparently tries multiple credential sources — environment variables, managed identity, Azure CLI login, Visual Studio — so the same `Program.cs` would work locally against `az login` and in production against the managed identity, with no code change.
 - **Key Vault as a configuration provider.** Once registered with `builder.Configuration.AddAzureKeyVault(...)`, secrets are accessed through the standard `IConfiguration` API. The application code doesn't know or care that the value came from Key Vault rather than `appsettings.json` — which means swapping in Key Vault is a deployment concern, not a code change.
-- **Declarative wins for anything past a demo.** The Bicep template is shorter than the equivalent CLI script, idempotent (re-running it converges to the same state), and handles dependency ordering automatically.
+- **How this differs from the MS Learn walkthrough.** The official tutorial ([*Create and retrieve secrets from Azure Key Vault*](https://microsoftlearning.github.io/mslearn-azure-developer/instructions/azure-secure-solutions/01-key-vault-store-retrieve.html)) is a local console app running in Cloud Shell, authenticating as your own user via `az login`. It demonstrates the SDK calls (`SetSecretAsync` / `GetSecretAsync`) but doesn't cover deployment, managed identity, or RBAC for the application principal. This repo fills that gap: it stands the whole pattern up as it would actually run in production.
 
 ## Architecture
 
@@ -49,6 +51,8 @@ The infrastructure lives in [`bicep/`](./bicep/): `main.bicep` is the template, 
 - .NET 9 SDK
 - `zip` and `jq`
 
+Tested on macOS and Linux. On Windows, run from WSL — the deploy script is bash and relies on POSIX tools.
+
 ## Deploy from GitHub
 
 The repo lives at [github.com/Transpolar/azure-key-vault-secret-app](https://github.com/Transpolar/azure-key-vault-secret-app).
@@ -61,6 +65,12 @@ chmod +x deploy.sh
 ```
 
 The script prints an App URL when it finishes. Give the App Service ~60 seconds to cold-start, then open the URL.
+
+If a previous deploy failed midway, the Key Vault may still be soft-deleted under the same name and the redeploy will fail with `ConflictError: vault with the same name already exists in deleted state`. Purge it first:
+
+```bash
+az keyvault purge --name <name-from-error> --location norwayeast
+```
 
 ## Cleanup
 
