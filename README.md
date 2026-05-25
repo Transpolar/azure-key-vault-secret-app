@@ -5,6 +5,8 @@ A proof-of-concept that deploys an ASP.NET Core 9 web app on Azure App Service w
 > **Important — this is a proof of concept.**
 > The deployed page prints secret values directly to the browser. That is intentional for this demo: it visually confirms that the app retrieved the secrets through Managed Identity rather than from local config. **Never do this in a real application.** Secrets should be consumed inside the app (e.g. used to open a database connection) and never rendered to the UI, written to logs, or returned in HTTP responses.
 
+![The deployed app showing the Key Vault name and three secrets retrieved via Managed Identity](docs/screenshot.png)
+
 ## What this is for
 
 The pattern this repo demonstrates — secrets in Key Vault, accessed from a Web App via Managed Identity, with RBAC controlling who can read what — is the standard way to handle credentials in modern Azure workloads. It removes connection strings and API keys from `appsettings.json`, environment variables, and CI/CD secrets.
