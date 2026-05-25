@@ -63,7 +63,7 @@ The script prints an App URL when it finishes. Give the App Service ~60 seconds 
 ## Cleanup
 
 ```bash
-az group delete --name keyvault-demo-rg --yes --no-wait
+az group delete --name keyvault-secret-app-rg --yes --no-wait
 ```
 
 This removes the resource group and everything inside it. The Key Vault is soft-delete-enabled by default, so its name remains reserved for 90 days — if you want to redeploy with the same name within that window, run `az keyvault purge --name <name>`.

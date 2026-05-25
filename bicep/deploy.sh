@@ -2,14 +2,14 @@
 set -e
 
 # ============================================
-# Azure Key Vault Demo - Bicep Deployment
+# Azure Key Vault Secret App - Bicep Deployment
 # ----------------------------------------------
 # Deploys the infrastructure declared in main.bicep
 # and then publishes the .NET app in ./src to the
 # resulting App Service.
 # ============================================
 
-RG_NAME="keyvault-demo-rg"
+RG_NAME="keyvault-secret-app-rg"
 LOCATION="norwayeast"
 PUBLISH_DIR=".publish"
 
@@ -17,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "=========================================="
-echo "Azure Key Vault Demo - Bicep Deployment"
+echo "Azure Key Vault Secret App - Bicep Deployment"
 echo "=========================================="
 echo "Resource Group : $RG_NAME"
 echo "Location       : $LOCATION"

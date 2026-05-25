@@ -1,5 +1,5 @@
 // ============================================
-// Azure Key Vault + Managed Identity Demo
+// Azure Key Vault Secret App
 // ----------------------------------------------
 // Provisions a Key Vault (RBAC), three secrets,
 // an App Service plan, a Web App with a system-

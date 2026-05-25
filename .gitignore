@@ -1,5 +1,5 @@
 # Build artifacts the deploy scripts create at runtime
-DemoApp/
+SecretApp/
 publish/
 .publish/
 app.zip
