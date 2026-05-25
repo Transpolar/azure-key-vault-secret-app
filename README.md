@@ -49,9 +49,11 @@ The infrastructure lives in [`bicep/`](./bicep/): `main.bicep` is the template, 
 
 ## Deploy from GitHub
 
+The repo lives at [github.com/Transpolar/azure-key-vault-secret-app](https://github.com/Transpolar/azure-key-vault-secret-app).
+
 ```bash
 git clone https://github.com/Transpolar/azure-key-vault-secret-app.git
-cd azure-keyvault-demo/bicep
+cd azure-key-vault-secret-app/bicep
 chmod +x deploy.sh
 ./deploy.sh
 ```
