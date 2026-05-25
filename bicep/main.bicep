@@ -37,7 +37,7 @@ param appSecret string
 
 // Built-in role definition ID for "Key Vault Secrets User".
 // Lets the principal read secret values from Key Vault.
-var keyVaultSecretsUserRoleId = '4633458b-17de-41a5-8b4b-ea4ce8a2a48c'
+var keyVaultSecretsUserRoleId = '4633458b-17de-408a-b874-0445c86b69e6'
 
 // ============================================
 // KEY VAULT
